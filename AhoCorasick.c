@@ -25,7 +25,6 @@ char ** genere_prefix(char * mots[],int start,int end,int * nb_etats){			//argv,
         }
     }
     printf("sizeprefixmax = %d , nbprefixmax = %d \n",sizeprefixmax,nbprefixmax);		// affichage première partie 
-
     char ** prefix = malloc(sizeof(char *)*nbprefixmax);
     if(prefix==NULL){
         perror("malloc");
@@ -39,34 +38,12 @@ char ** genere_prefix(char * mots[],int start,int end,int * nb_etats){			//argv,
             if(sizeprefix <= strlen(mots[nummots])){
                 if(isfirst){													//premier mot de cette taile
                     isfirst=0;
-                    /*
-                    prefix[etats]=malloc(sizeof(char)*sizeprefix);		//on ajoute un etat
-                    if(prefix[etats]==NULL){
-                            perror("malloc");
-                            exit(1);
-                    }
-
-                    for (int i = 0; i < sizeprefix; ++i){
-                            prefix[etats][i]=mots[nummots][i];
-                    }
-                    */
                     prefix[etats]=ajouteprefix(sizeprefix,mots[nummots]);
                     etats++;
                 }
                 else {
                     for (int j = 0; j < sizeprefix; ++j){					//compare toute les letre au mot précédent
                         if ( prefix[etats-1][j]!=mots[nummots][j]){
-                            /*
-                            prefix[etats]=malloc(sizeof(char)*sizeprefix);		//on ajoute un etat
-                            if(prefix[etats]==NULL){
-                                    perror("malloc");
-                                    exit(1);
-                            }
-
-                            for (int i = 0; i < sizeprefix; ++i){
-                                    prefix[etats][i]=mots[nummots][i];S
-                            }
-                            */
                             prefix[etats]=ajouteprefix(sizeprefix,mots[nummots]);
                             etats++;
                             break;
