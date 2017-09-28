@@ -14,6 +14,10 @@
 char ** copy_argv(char** argv,int start,int size){
     // allocate memory and copy strings
     char** new_argv = malloc((size-start) * sizeof (char *));
+    if(new_argv==NULL){
+        perror("malloc");
+        exit(1);
+    }
     for(int i = 0; i < size-start; ++i){
         size_t length = strlen(argv[i+start])+1;
         new_argv[i] = malloc(length* sizeof(char *));
@@ -46,4 +50,11 @@ static int cmpstringp(const void *p1, const void *p2){
 //sort a char **
 void sort_words(char ** words,int size){
 	qsort(words, size, sizeof(char*), cmpstringp);
+}
+
+//initialisation with argv of words table
+char ** init_words(char ** argv,int start,int end){
+    char **words=copy_argv(argv,start,end);
+    sort_words(words,end-start);
+    return words;
 }

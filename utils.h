@@ -20,5 +20,8 @@ void free_argv(char** argv,int size);
 //sort a char **
 void sort_words(char ** words,int size);
 
+//initialisation with argv of words table
+char ** init_words(char ** argv,int start,int end);
+
 #endif	/* UTILS_H */
 
