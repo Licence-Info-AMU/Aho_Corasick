@@ -9,6 +9,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define NBCARAC	26
+#define FIRSTCARAC	97
+
 char * ajouteprefix(int size,char * mot){
 	char *prefix=malloc(sizeof(char)*size);
 	memcpy(prefix, mot, size);
@@ -76,7 +79,7 @@ int ** tableau_commande(char ** prefix,int nb_etats){
 		exit(1);
 	}
 	for (int i = 0; i < nb_etats+1; ++i){
-		commande[i]=calloc(26,sizeof(int));
+		commande[i]=calloc(NBCARAC,sizeof(int));
 		if(commande[i]==NULL){
 			perror("calloc");
 			exit(1);
@@ -86,13 +89,12 @@ int ** tableau_commande(char ** prefix,int nb_etats){
 	for (int numprefix = 0; numprefix < nb_etats; ++numprefix){
 		if(strlen(prefix[numprefix])==sizeprefix){
 			if(sizeprefix==1){
-				commande[0][prefix[numprefix][0]-'a']=numprefix+1;			// met le numérot de l'etat correspondant au prefix dans la case de la lette/0 (prefix[numprefix][sizeprefix-1]-'a')
+				commande[0][prefix[numprefix][0]-FIRSTCARAC]=numprefix+1;			// met le numérot de l'etat correspondant au prefix dans la case de la lette/0 (prefix[numprefix][sizeprefix-1]-'a')
 			}
 			else{
 				int preprefix=-1;
 				for (int i = firstprefix; preprefix==-1 && i < nextfirstprefix; ++i){
-					int tmp=strncmp(prefix[numprefix],prefix[i],sizeprefix-1);	//comparaison des deux string jusqu'a sizeprefix-1
-					if(tmp==0){
+					if(strncmp(prefix[numprefix],prefix[i],sizeprefix-1) == 0){	//comparaison des deux string jusqu'a sizeprefix-1
 						preprefix=i;											// on trouve le préfix du préfix
 					}
 
@@ -108,7 +110,7 @@ int ** tableau_commande(char ** prefix,int nb_etats){
 					*/
 				}
 				if (preprefix!=-1){
-					commande[preprefix+1][prefix[numprefix][sizeprefix-1]-'a']=numprefix+1;	// met le numérot de l'etat correspondant au prefix dans la case de la lette/preprefix (prefix[numprefix][sizeprefix-1]-'a')
+					commande[preprefix+1][prefix[numprefix][sizeprefix-1]-FIRSTCARAC]=numprefix+1;	// met le numérot de l'etat correspondant au prefix dans la case de la lette/preprefix (prefix[numprefix][sizeprefix-1]-'a')
 				}
 				else{
 					printf("%s %s %s \n",prefix[numprefix],prefix[firstprefix],prefix[nextfirstprefix]);			//perror si on a pas trouver le prefix du prefix
@@ -127,22 +129,42 @@ int ** tableau_commande(char ** prefix,int nb_etats){
 }
 
 void show_tableau_commande(int ** commande, int nb_etats){
-	for (int j = 0; j < 26; ++j){
-		printf("\t%c",j+'a' );
+	for (int j = 0; j < NBCARAC; ++j){
+		printf("\t%c",j+FIRSTCARAC );
 	}
 	for (int i = 0; i < nb_etats+1; ++i){
 		printf("%d :\t", i);
-		for (int j = 0; j < 26; ++j){
+		for (int j = 0; j < NBCARAC; ++j){
 			printf("%d\t", commande[i][j]);
 		}
 		printf("\n");
 	}
 }
 
-/*int ** tableau_erreur(){
+int * tableau_erreur(char ** prefix,int nb_etats){
+	int * tab_erreur=calloc(nb_etats,sizeof(int));
+	for (int numprefix = 0; numprefix < nb_etats; ++numprefix){
+		if(strlen(prefix[numprefix])>1){											// pour tout les prefix de plus d'un lettre
+			int sufix=0;
+			int diffsize=strlen(prefix[numprefix])-strlen(prefix[sufix]);
+			while(diffsize>0){														// on regarde parmis tout les prefix plus petit qu'eux
+				if(strcmp(prefix[numprefix]+diffsize,prefix[sufix]) == 0 ){			// si l'un d'entre eux resemble a leur sufix et on prend le plus grand d'entre eux
+					tab_erreur[numprefix]=sufix+1;
+				}
+				++sufix;
+				diffsize=strlen(prefix[numprefix])-strlen(prefix[sufix]);
+			}
+		}
+	}
+	printf("%s %d\n",__func__,__LINE__ );
+	for (int i = 0; i < nb_etats; ++i){
+		printf("%d\t: %d\n",i,tab_erreur[i]);
+	}
 
+	return tab_erreur;
 }
 
+/*
 int ** fuuuuusion(){
 
 }*/
