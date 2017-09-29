@@ -14,5 +14,7 @@ char ** genere_prefix(char * mots[],int start,int end,int * nb_etats);
 
 int ** tableau_commande(char ** prefix,int nb_etats);
 
+void show_tableau_commande(int ** commande, int nb_etats);
+
 #endif	/* AHOCORASICK_H */
 

@@ -26,5 +26,6 @@ int main(int argc, char* argv[]){
     show_argv(prefix,nb_etats);
     printf("%d\n", nb_etats);
     int ** commande=tableau_commande(prefix,nb_etats);
+    show_tableau_commande(commande,nb_etats);
     return 0;
 }

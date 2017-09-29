@@ -53,7 +53,7 @@ char ** genere_prefix(char * mots[],int start,int end,int * nb_etats){			//argv,
             }
         }
     }
-    * nb_etats=etats;
+    *nb_etats=etats;
     return prefix;
 }
 
@@ -104,8 +104,12 @@ int ** tableau_commande(char ** prefix,int nb_etats){
             numprefix--;												// est-ce moche ?
         }
     }
+    return commande;
+}
+
+void show_tableau_commande(int ** commande, int nb_etats){
     for (int j = 0; j < 26; ++j){
-            printf("\t%c",j+'a' );
+        printf("\t%c",j+'a' );
     }
     for (int i = 0; i < nb_etats+1; ++i){
         printf("%d :\t", i);
@@ -114,7 +118,6 @@ int ** tableau_commande(char ** prefix,int nb_etats){
         }
         printf("\n");
     }
-    return commande;
 }
 
 /*int ** tableau_erreur(){
