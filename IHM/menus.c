@@ -20,7 +20,7 @@
 // Callbacks menus / boutons
 void on_item_about_activate (GtkWidget *widget, gpointer data){
     Mydata *my = get_mydata(data);
-    char *auteurs[] = {"Lucas Moragues <lucas.moragues.univ-amu.fr>","Gaëtan Perrot <gaetan.perrot@etu.univ-amu.fr>", NULL};
+    char *auteurs[] = {"Lucas Moragues <lucas.moragues@etu.univ-amu.fr>","Gaëtan Perrot <gaetan.perrot@etu.univ-amu.fr>", NULL};
     gtk_show_about_dialog (NULL, "program-name", my->title, "version", 
                            "0.1", "website", "https://github.com/moonlight83340/Aho_Corasick", 
                            "authors", auteurs, "logo-icon-name", 
@@ -42,7 +42,10 @@ void on_item_load_activate(GtkWidget *widget, gpointer data){
         char *filename;
         GtkFileChooser *chooser = GTK_FILE_CHOOSER (dialog);
         filename = gtk_file_chooser_get_filename (chooser);
+        gchar * contentsTemp = my->contents;
+        my->contents = NULL;
 		if(!g_file_get_contents (filename, &my->contents, NULL, NULL)){
+			my->contents =contentsTemp;
 			GtkDialogFlags flags = GTK_DIALOG_DESTROY_WITH_PARENT;
 			GtkWidget * error_dialog = gtk_message_dialog_new (GTK_WINDOW(my->window),
 																flags,GTK_MESSAGE_ERROR,GTK_BUTTONS_CLOSE,"Error reading “%s”",filename);
@@ -61,6 +64,7 @@ void on_item_load_activate(GtkWidget *widget, gpointer data){
 			gtk_text_buffer_insert (p_text_buffer, &iter, utf8, -1);
 			g_free (utf8), utf8 = NULL;
 		}
+		g_free(contentsTemp);
         my->current_folder = NULL;
         my->current_folder = gtk_file_chooser_get_current_folder(chooser);    
         g_free(filename);    

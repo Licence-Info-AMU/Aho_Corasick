@@ -32,7 +32,9 @@ void window_init (GtkApplication* app, gpointer user_data){
 void text_view_init (gpointer user_data){
 	Mydata *my = get_mydata(user_data);
 	my->p_text_view = gtk_text_view_new ();
+	gtk_text_view_set_editable(GTK_TEXT_VIEW(my->p_text_view), FALSE);
 	gtk_container_add (GTK_CONTAINER (my->p_text_view_scroll), my->p_text_view);
+	gtk_widget_set_sensitive (GTK_WIDGET (my->p_text_view), FALSE);
 }
 
 
