@@ -1,0 +1,4 @@
+gui.o: gui.c mydata.h
+main-app.o: main-app.c mydata.h menus.h gui.h
+menus.o: menus.c mydata.h menus.h
+mydata.o: mydata.c mydata.h

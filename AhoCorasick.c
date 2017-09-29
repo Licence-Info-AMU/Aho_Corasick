@@ -42,13 +42,25 @@ char ** genere_prefix(char * mots[],int start,int end,int * nb_etats){			//argv,
                     etats++;
                 }
                 else {
-                    for (int j = 0; j < sizeprefix; ++j){					//compare toute les letre au mot précédent
+                	int tmp=strncmp(mots[nummots],prefix[etats-1],sizeprefix);	//comparaison des deux string jusqu'a sizeprefix
+                	if (tmp > 0){												
+                		prefix[etats]=ajouteprefix(sizeprefix,mots[nummots]);
+                		etats++;
+                	}
+                	else if(tmp < 0){											//tmp est censer etre positif vu qu'on a trié avant
+                		perror("tris ascii")
+                	}
+
+                	/*
+                    for (int j = 0; j < sizeprefix; ++j){					//compare toute les lettres au mot précédent  vielle version a la main
                         if ( prefix[etats-1][j]!=mots[nummots][j]){
                             prefix[etats]=ajouteprefix(sizeprefix,mots[nummots]);
                             etats++;
                             break;
                         }
                     }
+                    */
+
                 }
             }
         }
