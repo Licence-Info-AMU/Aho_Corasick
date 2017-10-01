@@ -32,12 +32,39 @@ void window_init (GtkApplication* app, gpointer user_data){
     gtk_window_set_default_size (GTK_WINDOW (my->window), my->win_width, my->win_height);
 }
 
+/**
+ * \fn void text_view_init (gpointer user_data)
+ * \brief Fonction d'initialisation de la zone de texte
+ *
+ * \param self gpointer objet Mydata
+ * \return void
+ */
 void text_view_init (gpointer user_data){
 	Mydata *my = get_mydata(user_data);
 	my->p_text_view = gtk_text_view_new ();
 	gtk_text_view_set_editable(GTK_TEXT_VIEW(my->p_text_view), FALSE);
 	gtk_container_add (GTK_CONTAINER (my->p_text_view_scroll), my->p_text_view);
 	gtk_widget_set_sensitive (GTK_WIDGET (my->p_text_view), FALSE);
+}
+
+/**
+ * \fn void text_view_color(gpointer user_data,int start, int end)
+ * \brief Fonction de changement de colro d'une partie du texte
+ *
+ * \param self gpointer user_data,int start, int end
+ * \return void
+ */
+void text_view_color(gpointer user_data,int start, int end){
+	Mydata *my = get_mydata(user_data);
+	GtkTextIter startIter, endIter;
+	GtkTextBuffer *buffer;	
+	GtkTextTag *tag;
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (my->p_text_view));
+	tag = gtk_text_buffer_create_tag (buffer, "red_foreground",
+	   		            "foreground", "red", NULL);  
+	gtk_text_buffer_get_iter_at_offset (buffer, &startIter, start);
+	gtk_text_buffer_get_iter_at_offset (buffer, &endIter, end);
+	gtk_text_buffer_apply_tag (buffer, tag, &startIter, &endIter);
 }
 
 //À finir !
@@ -48,7 +75,7 @@ void on_changed_search_entry (GtkSearchEntry *entry,gpointer user_data){
 	const char separator = ' ';
 	printf("strings %d\n",__LINE__);
 	Strings strings = convert_str_into_TabStr_by_separator((char *)entry_text,separator);
-	
+
 	//Ancien main
     int nb_etats; 
     printf("prefix %d\n",__LINE__);
@@ -71,6 +98,13 @@ void on_changed_search_entry (GtkSearchEntry *entry,gpointer user_data){
     printf("fin %d\n",__LINE__);
 }
 
+/**
+ * \fn void search_bar_init(gpointer user_data)
+ * \brief Fonction d'initialisation de la barre de recherche
+ *
+ * \param self gpointer objet Mydata
+ * \return void
+ */
 void search_bar_init(gpointer user_data){
 	Mydata *my = get_mydata(user_data);
 	my->search_bar = gtk_search_bar_new();

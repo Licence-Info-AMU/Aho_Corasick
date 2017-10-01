@@ -29,6 +29,25 @@ void window_init (GtkApplication* app, gpointer user_data);
  * \return void
  */
 void text_view_init (gpointer user_data);
+
+/**
+ * \fn void text_view_color(gpointer user_data,int start, int end)
+ * \brief Fonction de changement de colro d'une partie du texte
+ *
+ * \param self gpointer user_data,int start, int end
+ * \return void
+ */
+void text_view_color(gpointer user_data,int start, int end);
+
+/**
+ * \fn void search_bar_init(gpointer user_data)
+ * \brief Fonction d'initialisation de la barre de recherche
+ *
+ * \param self gpointer objet Mydata
+ * \return void
+ */
+void search_bar_init(gpointer user_data);
+
 /**
  * \fn void layout_init (gpointer user_data)
  * \brief Fonction d'initialisation du layout
