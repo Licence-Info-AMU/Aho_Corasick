@@ -53,17 +53,6 @@ char ** genere_prefix(char * mots[],int start,int end,int * nb_etats){			//argv,
 					else if(tmp < 0){											//tmp est censer etre positif vu qu'on a trié avant
 						perror("tris ascii");
 					}
-
-					/*
-					for (int j = 0; j < sizeprefix; ++j){						//compare toute les lettres au mot précédent  			vielle version lettre par lettre a la main
-						if ( prefix[etats-1][j]!=mots[nummots][j]){
-							prefix[etats]=ajouteprefix(sizeprefix,mots[nummots]);
-							etats++;
-							break;
-						}
-					}
-					*/
-
 				}
 			}
 		}
@@ -97,17 +86,6 @@ int ** tableau_commande(char ** prefix,int nb_etats){
 					if(strncmp(prefix[numprefix],prefix[i],sizeprefix-1) == 0){	//comparaison des deux string jusqu'a sizeprefix-1
 						preprefix=i;											// on trouve le préfix du préfix
 					}
-
-					/*
-					for (int lettre = 0; lettre < sizeprefix-1; ++lettre){				// on compare les prefix précédent au préfix actuel			vielle version lettre par lettre
-						if(prefix[i][lettre]!=prefix[numprefix][lettre]){
-							break;
-						}
-						else if(lettre==sizeprefix-2){
-							preprefix=i;												// on trouve le préfix du préfix
-						}
-					}
-					*/
 				}
 				if (preprefix!=-1){
 					commande[preprefix+1][prefix[numprefix][sizeprefix-1]-FIRSTCARAC]=numprefix+1;	// met le numérot de l'etat correspondant au prefix dans la case de la lette/preprefix (prefix[numprefix][sizeprefix-1]-'a')
