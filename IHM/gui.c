@@ -76,7 +76,7 @@ void on_changed_search_entry (GtkSearchEntry *entry,gpointer user_data){
 	printf("strings %d\n",__LINE__);
 	Strings strings = convert_str_into_TabStr_by_separator((char *)entry_text,separator);
 
-	//Ancien main
+	//Ancien main problème d'erreur de segmentation, ça pu....
     int nb_etats; 
     printf("prefix %d\n",__LINE__);
     char ** prefix=genere_prefix(strings.tabStr,0,strings.size,&nb_etats);
