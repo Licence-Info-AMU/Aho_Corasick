@@ -64,10 +64,12 @@ int count_occurence_in_str(char * str,const char separator){
 
 Strings convert_str_into_TabStr_by_separator(char * str,const char separator){
 	char *token = NULL;
+	char* str_copy = malloc(strlen(str) + 1);
+	strcpy(str_copy,str);
 	Strings strings;
 	int i = 0;
 	init_Strings_with_size(&strings,count_occurence_in_str(str,separator)+1);
-	token = strtok(str, &separator);
+	token = strtok(str_copy, &separator);
 	while(token != NULL){
 		size_t length = strlen(token)+1;
 		strings.tabStr[i] = malloc(length* sizeof(char *));
@@ -77,6 +79,7 @@ Strings convert_str_into_TabStr_by_separator(char * str,const char separator){
 		i++;
 		token = strtok(NULL, &separator);
    }
+   free(str_copy);
    return strings;
 }
 
