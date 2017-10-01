@@ -54,5 +54,7 @@ void init_mydata(Mydata *my){
     my->p_text_view = NULL;
     my->contents = NULL;
 	my->p_text_view_scroll = NULL;
+	my->search_bar = NULL;
+	my->entry = NULL;
 }
 

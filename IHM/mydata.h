@@ -26,11 +26,13 @@ typedef struct {
     char * current_folder;				/*!< Dossier courant. */ 
     char *title;						/*!< Titre de la fenêtre principale. */ 
     GtkWidget *vbox;					/*!< Vertical box. */ 
-    GtkWidget *hbox;					/*!< Horizontal box. */ 
+    GtkWidget *hbox;					/*!< Horizontal box. */  
     GtkWidget *p_text_view;				/*!< Texte view. */ 
     gchar *contents;					/*!< Contenu du fichier. */ 
     GtkWidget *p_text_view_scroll;		/*!< Scroll bar. */ 
     GtkWidget *menu_bar;				/*!< Barre menu. */ 
+    GtkWidget *search_bar;				/*!< Barre de recherche. */
+    GtkWidget *entry;					/*!< text entry. */
 } Mydata;
 
 /**
