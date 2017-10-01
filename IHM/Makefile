@@ -12,7 +12,7 @@ LIBS    = $$(pkg-config gtk+-3.0 --libs) -lm
 
 # Mettre ici la liste des fichiers .c separes par un espace ;
 # si besoin on peut eclater la liste sur plusieurs lignes avec "\".
-CFILES  = main-app.c mydata.c menus.c gui.c
+CFILES  = main-app.c mydata.c menus.c gui.c strings.c AhoCorasick.c utils.c
 
 # Mettre ici le nom de l'executable.
 EXEC    = main-app

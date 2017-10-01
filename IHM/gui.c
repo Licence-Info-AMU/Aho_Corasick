@@ -14,6 +14,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mydata.h"
+#include "strings.h"
+#include "AhoCorasick.h"
+#include "utils.h"
 
 /**
  * \fn void window_init (GtkApplication* app, gpointer user_data)
@@ -37,60 +40,35 @@ void text_view_init (gpointer user_data){
 	gtk_widget_set_sensitive (GTK_WIDGET (my->p_text_view), FALSE);
 }
 
-typedef struct {
-	char** tabStr;
-	int size;
-} Strings;
-
-void init_Strings(Strings * strings){
-	strings->size = 0;
-}
-
-void init_Strings_with_size(Strings * strings,int size){
-	strings->size = size;
-	strings->tabStr = malloc((strings->size) * sizeof (char *));
-	if(strings->tabStr==NULL){
-        perror("malloc strings->tabstr Strings");
-        exit(1);
-   }
-}
-
-int count_occurence_in_str(char * str,const char separator){
-	int count = 0;
-	for (int i=0; str[i]; i++)
-		count += (str[i] == separator);	
-	return count;
-}
-
-Strings convert_str_into_TabStr_by_separator(char * str,const char separator){
-	char *token = NULL;
-	char* str_copy = malloc(strlen(str) + 1);
-	strcpy(str_copy,str);
-	Strings strings;
-	int i = 0;
-	init_Strings_with_size(&strings,count_occurence_in_str(str,separator)+1);
-	token = strtok(str_copy, &separator);
-	while(token != NULL){
-		size_t length = strlen(token)+1;
-		strings.tabStr[i] = malloc(length* sizeof(char *));
-		memcpy(strings.tabStr[i], token, length);
-		printf( " %s\n", strings.tabStr[i] );
-		printf( " %d\n",i);
-		i++;
-		token = strtok(NULL, &separator);
-   }
-   free(str_copy);
-   return strings;
-}
-
-
 //À finir !
 void on_changed_search_entry (GtkSearchEntry *entry,gpointer user_data){
 	Mydata *my = get_mydata(user_data);
 	const gchar *entry_text = gtk_entry_get_text(GTK_ENTRY(entry));
 	printf("%s\n",entry_text);
 	const char separator = ' ';
+	printf("strings %d\n",__LINE__);
 	Strings strings = convert_str_into_TabStr_by_separator((char *)entry_text,separator);
+	
+	//Ancien main
+    int nb_etats; 
+    printf("prefix %d\n",__LINE__);
+    char ** prefix=genere_prefix(strings.tabStr,0,strings.size,&nb_etats);
+    printf("show prefix %d\n",__LINE__);
+    show_argv(prefix,nb_etats);
+    printf("%d\n", nb_etats);
+    printf("commande %d\n",__LINE__);
+    int ** commande=tableau_commande(prefix,nb_etats);
+    printf("show commande %d\n",__LINE__);
+    show_tableau_commande(commande,nb_etats);
+    printf("erreur %d\n",__LINE__);
+    int * erreur=tableau_erreur(prefix,nb_etats);
+    printf("show erreur %d\n",__LINE__);
+    show_tableau_erreur(erreur,nb_etats);
+    printf("fusion %d\n",__LINE__);
+    fuuuuusion(commande,erreur,nb_etats);
+    printf("show fusion%d\n",__LINE__);
+    show_tableau_commande(commande,nb_etats);
+    printf("fin %d\n",__LINE__);
 }
 
 void search_bar_init(gpointer user_data){
