@@ -18,5 +18,9 @@ void show_tableau_commande(int ** commande, int nb_etats);
 
 int * tableau_erreur(char ** prefix,int nb_etats);
 
+void show_tableau_erreur(int * erreur,int nb_etats);
+
+void fuuuuusion(int ** commande,int * erreur,int nb_etats);
+
 #endif	/* AHOCORASICK_H */
 

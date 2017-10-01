@@ -129,6 +129,7 @@ int ** tableau_commande(char ** prefix,int nb_etats){
 }
 
 void show_tableau_commande(int ** commande, int nb_etats){
+	printf("\ntableau commande :\n");
 	for (int j = 0; j < NBCARAC; ++j){
 		printf("\t%c",j+FIRSTCARAC );
 	}
@@ -156,15 +157,25 @@ int * tableau_erreur(char ** prefix,int nb_etats){
 			}
 		}
 	}
-	printf("%s %d\n",__func__,__LINE__ );
-	for (int i = 0; i < nb_etats; ++i){
-		printf("%d\t: %d\n",i,tab_erreur[i]);
-	}
-
 	return tab_erreur;
 }
 
-/*
-int ** fuuuuusion(){
+void show_tableau_erreur(int * erreur,int nb_etats){
+	printf("\ntableau erreur :\n");
+	for (int i = 0; i < nb_etats; ++i){
+		printf("%d\t: %d\n",i,erreur[i]);
+	}
+}
 
-}*/
+
+void fuuuuusion(int ** commande,int * erreur,int nb_etats){
+	for (int etat = 0; etat < nb_etats; ++etat){
+		if(erreur[etat]>0){					// pour tout les etats qui on un retour en cas d'erreur
+			for (int i = 0; i < NBCARAC; ++i){
+				if(commande[etat+1][i]==0 && commande[erreur[etat]][i]!=0){
+					commande[etat+1][i]=commande[erreur[etat]][i];			// ajout des transition non 0 de l'erreur[etat]  sur les transition 0 de l'etat
+				}
+			}
+		}
+	}
+}

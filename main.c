@@ -28,5 +28,8 @@ int main(int argc, char* argv[]){
     int ** commande=tableau_commande(prefix,nb_etats);
     show_tableau_commande(commande,nb_etats);
     int * erreur=tableau_erreur(prefix,nb_etats);
+    show_tableau_erreur(erreur,nb_etats);
+    fuuuuusion(commande,erreur,nb_etats);
+    show_tableau_commande(commande,nb_etats);
     return 0;
 }
