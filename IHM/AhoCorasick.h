@@ -22,5 +22,7 @@ void show_tableau_erreur(int * erreur,int nb_etats);
 
 void fuuuuusion(int ** commande,int * erreur,int nb_etats);
 
+int ** build_commande(char * words, const char separator);
+
 #endif	/* AHOCORASICK_H */
 
