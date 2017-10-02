@@ -26,10 +26,10 @@
  * \return void
  */
 void window_init (GtkApplication* app, gpointer user_data){
-    Mydata *my = get_mydata(user_data);
-    my->window = gtk_application_window_new (app);
-    gtk_window_set_title (GTK_WINDOW (my->window), my->title);
-    gtk_window_set_default_size (GTK_WINDOW (my->window), my->win_width, my->win_height);
+	Mydata *my = get_mydata(user_data);
+	my->window = gtk_application_window_new (app);
+	gtk_window_set_title (GTK_WINDOW (my->window), my->title);
+	gtk_window_set_default_size (GTK_WINDOW (my->window), my->win_width, my->win_height);
 }
 
 /**
@@ -61,7 +61,7 @@ void text_view_color(gpointer user_data,int start, int end){
 	GtkTextTag *tag;
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (my->p_text_view));
 	tag = gtk_text_buffer_create_tag (buffer, "red_foreground",
-	   		            "foreground", "red", NULL);  
+	   					"foreground", "red", NULL);  
 	gtk_text_buffer_get_iter_at_offset (buffer, &startIter, start);
 	gtk_text_buffer_get_iter_at_offset (buffer, &endIter, end);
 	gtk_text_buffer_apply_tag (buffer, tag, &startIter, &endIter);
@@ -72,27 +72,52 @@ void on_changed_search_entry (GtkSearchEntry *entry,gpointer user_data){
 	Mydata *my = get_mydata(user_data);
 	const gchar *entry_text = gtk_entry_get_text(GTK_ENTRY(entry));
 	printf("%s\n",entry_text);
-	const char separator = ' ';
-	Strings strings = convert_str_into_TabStr_by_separator((char *)entry_text,separator);
-	printf("strings.size : %d\n", strings.size);
-	sort_words(strings.tabStr,strings.size);
-	show_argv(strings.tabStr,strings.size);
+	if(strlen((char *) entry_text) > 0){
+		int cpt=0;
+		while(entry_text[cpt] == ' '){
+			cpt++;
+		}
+		char * str_copy =malloc(strlen(entry_text) + 1-cpt);
+		strcpy(str_copy,(char *) entry_text+cpt);
+		if(strlen(str_copy) > 0){
+			const char separator = ' ';
 
-	//Ancien main problème d'erreur de segmentation, ça pu....
-    int nb_etats; 
-    char ** prefix=genere_prefix(strings.tabStr,0,strings.size,&nb_etats);
-    show_argv(prefix,nb_etats);
-    printf("%d\n", nb_etats);
-    int ** commande=tableau_commande(prefix,nb_etats);
-    show_tableau_commande(commande,nb_etats);
-    int * erreur=tableau_erreur(prefix,nb_etats);
-    show_tableau_erreur(erreur,nb_etats);
-    fuuuuusion(commande,erreur,nb_etats);
-    show_tableau_commande(commande,nb_etats);
-    /*free_argv(strings.tabStr,strings.size);
-    free_argv(prefix,nb_etats);
-	free(erreur);
-    free_tabIntInt(commande,nb_etats);*/
+			Strings strings = convert_str_into_TabStr_by_separator(str_copy,separator);
+
+			printf("strings.size : %d\n", strings.size);
+			
+			show_argv(strings.tabStr,strings.size);
+			printf("\n");
+			sort_words(strings.tabStr,strings.size);
+			show_argv(strings.tabStr,strings.size);
+			printf("\n");
+
+			//Ancien main problème d'erreur de segmentation, ça pu....
+			int nb_etats,sizeprefix; 
+			char ** prefix=genere_prefix(strings.tabStr,0,strings.size,&nb_etats,&sizeprefix);
+			show_argv(prefix,nb_etats);
+			printf("%d\n", nb_etats);
+			int ** commande=tableau_commande(prefix,nb_etats);
+			show_tableau_commande(commande,nb_etats);
+			int * erreur=tableau_erreur(prefix,nb_etats);
+			show_tableau_erreur(erreur,nb_etats);
+			fuuuuusion(commande,erreur,nb_etats);
+			show_tableau_commande(commande,nb_etats);
+			//free zone
+			printf("mots\n");
+			free_argv(strings.tabStr,strings.size);
+			printf("prefix\n");
+			free_argv(prefix,nb_etats);
+			printf("erreur\n");
+			free(erreur);
+			erreur=NULL;
+			free(str_copy);
+			str_copy=NULL;
+			printf("commande\n");
+			free_tabIntInt(commande,nb_etats+1);
+			printf("Fiiiiiiiiiiiiiiiiiiiiiiiiiin\n");
+		}
+	}
 }
 
 /**
@@ -121,15 +146,15 @@ void search_bar_init(gpointer user_data){
  * \return void
  */
 void layout_init (gpointer user_data){
-    Mydata *my = get_mydata(user_data);
-    my->vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
-    my->hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
-    gtk_container_add (GTK_CONTAINER (my->window), my->vbox);
+	Mydata *my = get_mydata(user_data);
+	my->vbox = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
+	my->hbox = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 4);
+	gtk_container_add (GTK_CONTAINER (my->window), my->vbox);
 	my->p_text_view_scroll = gtk_scrolled_window_new (NULL, NULL);
-    //Menu
-    gtk_box_pack_start (GTK_BOX (my->vbox), my->menu_bar, FALSE, FALSE, 0);
-    search_bar_init(my);
-    gtk_box_pack_start (GTK_BOX (my->vbox), my->hbox, TRUE, TRUE, 0);
-    gtk_box_pack_start (GTK_BOX (my->hbox), my->p_text_view_scroll, TRUE, TRUE, 0);
-    text_view_init(my);
+	//Menu
+	gtk_box_pack_start (GTK_BOX (my->vbox), my->menu_bar, FALSE, FALSE, 0);
+	search_bar_init(my);
+	gtk_box_pack_start (GTK_BOX (my->vbox), my->hbox, TRUE, TRUE, 0);
+	gtk_box_pack_start (GTK_BOX (my->hbox), my->p_text_view_scroll, TRUE, TRUE, 0);
+	text_view_init(my);
 }

@@ -8,17 +8,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "AhoCorasick.h"
 
-#define NBCARAC	26
-#define FIRSTCARAC	97
+#define NBCARAC	256
+#define FIRSTCARAC	0
 
 char * ajouteprefix(int size,char * mot){
-	char *prefix=malloc(sizeof(char)*size);
+	char *prefix=calloc(size,sizeof(char));
+	if(prefix==NULL){
+		perror("malloc");
+		exit(1);
+	}
 	memcpy(prefix, mot, size);
 	return prefix;
 }
 
-char ** genere_prefix(char * mots[],int start,int end,int * nb_etats){			//argv,2,argc, un pointeur sur un entier
+char ** genere_prefix(char ** mots,int start,int end,int * nb_etats,int * sizetabprefix){			//argv,2,argc, un pointeur sur un entier
 	int nbprefixmax=0,sizeprefixmax=0;
 	for (int nummots=start; nummots < end; ++nummots){
 		int taillemot=strlen(mots[nummots]);
@@ -33,6 +38,7 @@ char ** genere_prefix(char * mots[],int start,int end,int * nb_etats){			//argv,
 		perror("malloc");
 		exit(1);
 	}
+	*sizetabprefix=nbprefixmax;
 	int isfirst;
 	int etats=0;
 	for (int sizeprefix = 1; sizeprefix <= sizeprefixmax; ++sizeprefix){		// genere les prefix taille par taille
@@ -111,6 +117,7 @@ void show_tableau_commande(int ** commande, int nb_etats){
 	for (int j = 0; j < NBCARAC; ++j){
 		printf("\t%c",j+FIRSTCARAC );
 	}
+	printf("\n");
 	for (int i = 0; i < nb_etats+1; ++i){
 		printf("%d :\t", i);
 		for (int j = 0; j < NBCARAC; ++j){
@@ -119,6 +126,36 @@ void show_tableau_commande(int ** commande, int nb_etats){
 		printf("\n");
 	}
 }
+/*
+void show_tableau_commande(int ** commande, int nb_etats){
+	printf("\ntableau commande :\n");
+	int util[NBCARAC];
+	for (int j = 0; j < NBCARAC; ++j){
+		util[j]=0;
+		for (int i = 0; i < nb_etats+1; ++i){
+			if(commande[i][j]!=0){
+				util[j]=1;
+				break;
+			}
+		}
+	}
+	for (int j = 0; j < NBCARAC; ++j){
+		if(util[j]==1){
+			printf("\t%c",j+FIRSTCARAC );
+		}
+	}
+	printf("\n");
+	for (int i = 0; i < nb_etats+1; ++i){
+		printf("%d :\t", i);
+		for (int j = 0; j < NBCARAC; ++j){
+			if(util[j]==1){
+				printf("%d\t", commande[i][j]);
+			}
+		}
+		printf("\n");
+	}
+}
+*/
 
 int * tableau_erreur(char ** prefix,int nb_etats){
 	int * tab_erreur=calloc(nb_etats,sizeof(int));

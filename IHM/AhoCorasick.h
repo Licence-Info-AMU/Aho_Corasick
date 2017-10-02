@@ -10,7 +10,7 @@
 
 char * ajouteprefix(int size,char * mot);
 
-char ** genere_prefix(char * mots[],int start,int end,int * nb_etats);
+char ** genere_prefix(char ** mots,int start,int end,int * nb_etats,int * sizetabprefix);
 
 int ** tableau_commande(char ** prefix,int nb_etats);
 

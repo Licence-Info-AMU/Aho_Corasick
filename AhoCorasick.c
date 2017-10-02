@@ -8,17 +8,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "utils.h"
 
 #define NBCARAC	26
 #define FIRSTCARAC	97
 
 char * ajouteprefix(int size,char * mot){
-	char *prefix=malloc(sizeof(char)*size);
+	char *prefix=calloc(size,sizeof(char));
+	if(prefix==NULL){
+		perror("malloc");
+		exit(1);
+	}
 	memcpy(prefix, mot, size);
 	return prefix;
 }
 
-char ** genere_prefix(char * mots[],int start,int end,int * nb_etats){			//argv,2,argc, un pointeur sur un entier
+char ** genere_prefix(char ** mots,int start,int end,int * nb_etats){			//argv,2,argc, un pointeur sur un entier
 	int nbprefixmax=0,sizeprefixmax=0;
 	for (int nummots=start; nummots < end; ++nummots){
 		int taillemot=strlen(mots[nummots]);
