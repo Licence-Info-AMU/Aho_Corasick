@@ -112,6 +112,7 @@ int ** tableau_commande(char ** prefix,int nb_etats){
 	return commande;
 }
 
+/*
 void show_tableau_commande(int ** commande, int nb_etats){
 	printf("\ntableau commande :\n");
 	for (int j = 0; j < NBCARAC; ++j){
@@ -126,7 +127,9 @@ void show_tableau_commande(int ** commande, int nb_etats){
 		printf("\n");
 	}
 }
-/*
+*/
+
+
 void show_tableau_commande(int ** commande, int nb_etats){
 	printf("\ntableau commande :\n");
 	int util[NBCARAC];
@@ -155,7 +158,7 @@ void show_tableau_commande(int ** commande, int nb_etats){
 		printf("\n");
 	}
 }
-*/
+
 
 int * tableau_erreur(char ** prefix,int nb_etats){
 	int * tab_erreur=calloc(nb_etats,sizeof(int));
