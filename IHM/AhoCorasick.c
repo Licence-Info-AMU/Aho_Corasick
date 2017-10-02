@@ -16,14 +16,14 @@
 char * ajouteprefix(int size,char * mot){
 	char *prefix=calloc(size,sizeof(char));
 	if(prefix==NULL){
-		perror("malloc");
+		perror("calloc");
 		exit(1);
 	}
 	memcpy(prefix, mot, size);
 	return prefix;
 }
 
-char ** genere_prefix(char ** mots,int start,int end,int * nb_etats,int * sizetabprefix){			//argv,2,argc, un pointeur sur un entier
+char ** genere_prefix(char ** mots,int start,int end,int * nb_etats){			//argv,2,argc, un pointeur sur un entier
 	int nbprefixmax=0,sizeprefixmax=0;
 	for (int nummots=start; nummots < end; ++nummots){
 		int taillemot=strlen(mots[nummots]);
@@ -38,7 +38,6 @@ char ** genere_prefix(char ** mots,int start,int end,int * nb_etats,int * sizeta
 		perror("malloc");
 		exit(1);
 	}
-	*sizetabprefix=nbprefixmax;
 	int isfirst;
 	int etats=0;
 	for (int sizeprefix = 1; sizeprefix <= sizeprefixmax; ++sizeprefix){		// genere les prefix taille par taille
@@ -162,6 +161,10 @@ void show_tableau_commande(int ** commande, int nb_etats){
 
 int * tableau_erreur(char ** prefix,int nb_etats){
 	int * tab_erreur=calloc(nb_etats,sizeof(int));
+	if(tab_erreur==NULL){
+		perror("calloc");
+		exit(1);
+	}
 	for (int numprefix = 0; numprefix < nb_etats; ++numprefix){
 		if(strlen(prefix[numprefix])>1){											// pour tout les prefix de plus d'un lettre
 			int sufix=0;
@@ -188,12 +191,67 @@ void show_tableau_erreur(int * erreur,int nb_etats){
 
 void fuuuuusion(int ** commande,int * erreur,int nb_etats){
 	for (int etat = 0; etat < nb_etats; ++etat){
-		if(erreur[etat]>0){					// pour tout les etats qui on un retour en cas d'erreur
-			for (int i = 0; i < NBCARAC; ++i){
-				if(commande[etat+1][i]==0 && commande[erreur[etat]][i]!=0){
-					commande[etat+1][i]=commande[erreur[etat]][i];			// ajout des transition non 0 de l'erreur[etat]  sur les transition 0 de l'etat
-				}
+		for (int i = 0; i < NBCARAC; ++i){
+			if(commande[etat+1][i]==0 && commande[erreur[etat]][i]!=0){
+				commande[etat+1][i]=commande[erreur[etat]][i];			// ajout des transition non 0 de l'erreur[etat]  sur les transition 0 de l'etat
 			}
 		}
 	}
 }
+
+int * etat_finaux(char ** mots,int nbmots,char ** prefix,int nb_etats){
+	int * etat_finaux=calloc(nb_etats,sizeof(int));
+	if(etat_finaux==NULL){
+		perror("calloc");
+		exit(1);
+	}
+
+	for (int etat = 0; etat < nb_etats; ++etat){
+		for (int i = 0; i < nbmots; ++i){
+			if(strcmp(prefix[etat],mots[i]) == 0){
+				etat_finaux[etat]=strlen(prefix[etat]);
+			}
+		}
+	}
+	return etat_finaux;
+}
+
+/*
+int startread(int ** commande,char lettre ){		// peut etre useless (utilisation de nextetat avec etat=0)
+	int read=0;
+	for (int i = 0; i < NBCARAC; ++i){	//tester si la lettre est dans commande
+		if (lettre==(char) i+FIRSTCARAC){
+			read=1;
+			break;
+		}
+	}
+	if (read){
+		return commande[0][lettre];
+	}
+	return 0;
+}
+*/
+
+int nextetat(int ** commande,int etat, char lettre ){
+	int read=0;
+	for (int i = 0; i < NBCARAC; ++i){	//tester si la lettre est dans commande
+		if ((int)lettre== i+FIRSTCARAC){
+			read=1;
+			break;
+		}
+	}
+	if (read){
+		return commande[etat][(int)lettre-FIRSTCARAC];
+	}
+	return 0;
+}
+
+/*
+int lirecarac(char lettre,peut etre my ?){														//renvoi 0 ou renvoie la taille du mot lu si on arrive a la fin de mot (donc revenir en arrière pour colorier)
+	my->etat=nextetat(my->commande,my->etat,lettre);	//change l'etat avec la lettre lue
+	if(my->etat > 0){
+		return my->etat_finaux[etat-1];
+	}
+	return 0;
+}		//pense a initialiser my->etat=0 avant chaque lecture du debut du text ;)
+*/
