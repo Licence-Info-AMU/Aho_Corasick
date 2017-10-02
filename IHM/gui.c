@@ -73,29 +73,26 @@ void on_changed_search_entry (GtkSearchEntry *entry,gpointer user_data){
 	const gchar *entry_text = gtk_entry_get_text(GTK_ENTRY(entry));
 	printf("%s\n",entry_text);
 	const char separator = ' ';
-	printf("strings %d\n",__LINE__);
 	Strings strings = convert_str_into_TabStr_by_separator((char *)entry_text,separator);
+	printf("strings.size : %d\n", strings.size);
+	sort_words(strings.tabStr,strings.size);
+	show_argv(strings.tabStr,strings.size);
 
 	//Ancien main problème d'erreur de segmentation, ça pu....
     int nb_etats; 
-    printf("prefix %d\n",__LINE__);
     char ** prefix=genere_prefix(strings.tabStr,0,strings.size,&nb_etats);
-    printf("show prefix %d\n",__LINE__);
     show_argv(prefix,nb_etats);
     printf("%d\n", nb_etats);
-    printf("commande %d\n",__LINE__);
     int ** commande=tableau_commande(prefix,nb_etats);
-    printf("show commande %d\n",__LINE__);
     show_tableau_commande(commande,nb_etats);
-    printf("erreur %d\n",__LINE__);
     int * erreur=tableau_erreur(prefix,nb_etats);
-    printf("show erreur %d\n",__LINE__);
     show_tableau_erreur(erreur,nb_etats);
-    printf("fusion %d\n",__LINE__);
     fuuuuusion(commande,erreur,nb_etats);
-    printf("show fusion%d\n",__LINE__);
     show_tableau_commande(commande,nb_etats);
-    printf("fin %d\n",__LINE__);
+    /*free_argv(strings.tabStr,strings.size);
+    free_argv(prefix,nb_etats);
+	free(erreur);
+    free_tabIntInt(commande,nb_etats);*/
 }
 
 /**

@@ -12,10 +12,12 @@
 
 void init_Strings(Strings * strings){
 	strings->size = 0;
+	strings->tabStr = NULL;
 }
 
 void init_Strings_with_size(Strings * strings,int size){
 	strings->size = size;
+	strings->tabStr = NULL;
 	strings->tabStr = malloc((strings->size) * sizeof (char *));
 	if(strings->tabStr==NULL){
         perror("malloc strings->tabstr Strings");
@@ -25,8 +27,12 @@ void init_Strings_with_size(Strings * strings,int size){
 
 int count_occurence_in_str(char * str,const char separator){
 	int count = 0;
-	for (int i=0; str[i]; i++)
-		count += (str[i] == separator);	
+	size_t length = strlen(str);
+	printf("length str : %d\n",(int)length);
+	for (int i=0; str[i]; i++){
+		count += ((str[i] == separator) && (i != length-1) && (str[i+1] != separator));
+		printf("i et count : %d - %d\n",i, count);
+	}
 	return count;
 }
 
