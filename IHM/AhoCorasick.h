@@ -22,11 +22,15 @@ void show_tableau_erreur(int * erreur,int nb_etats);
 
 void fuuuuusion(int ** commande,int * erreur,int nb_etats);
 
+<<<<<<< HEAD
 int * etat_finaux(char ** mots,int nbmots,char ** prefix,int nb_etats);
 
 // int startread(int ** commande,char lettre );
 
 int nextetat(int ** commande,int etat, char lettre );
+=======
+int ** build_commande(char * words, const char separator);
+>>>>>>> cffb5698865e37eab9dcc08d4c1e13552f24bf4e
 
 #endif	/* AHOCORASICK_H */
 

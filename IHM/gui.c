@@ -14,8 +14,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "mydata.h"
-#include "strings.h"
 #include "AhoCorasick.h"
+#include "strings.h"
 #include "utils.h"
 
 /**
@@ -60,11 +60,36 @@ void text_view_color(gpointer user_data,int start, int end){
 	GtkTextBuffer *buffer;	
 	GtkTextTag *tag;
 	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (my->p_text_view));
-	tag = gtk_text_buffer_create_tag (buffer, "red_foreground",
-	   					"foreground", "red", NULL);  
+	tag = gtk_text_buffer_create_tag (buffer, NULL,
+	   		            "foreground", "blue", NULL); 
 	gtk_text_buffer_get_iter_at_offset (buffer, &startIter, start);
 	gtk_text_buffer_get_iter_at_offset (buffer, &endIter, end);
 	gtk_text_buffer_apply_tag (buffer, tag, &startIter, &endIter);
+}
+
+void text_view_remove_all_color(gpointer user_data,int start, int end){
+	Mydata *my = get_mydata(user_data);
+	GtkTextIter startIter, endIter;
+	GtkTextBuffer *buffer;	
+	buffer = gtk_text_view_get_buffer (GTK_TEXT_VIEW (my->p_text_view));
+	gtk_text_buffer_get_iter_at_offset (buffer, &startIter, start);
+	gtk_text_buffer_get_iter_at_offset (buffer, &endIter, end);
+	gtk_text_buffer_remove_all_tags (buffer,&startIter, &endIter);
+}
+
+gchar * getText_from_TextView(GtkTextView * p_text_view){
+	gchar *contents = NULL;
+	gchar *locale = NULL;
+	GtkTextIter start;
+	GtkTextIter end;
+	GtkTextBuffer *p_text_buffer = NULL;
+
+	p_text_buffer = gtk_text_view_get_buffer (p_text_view);
+	gtk_text_buffer_get_bounds (p_text_buffer, &start, &end);
+	contents = gtk_text_buffer_get_text (p_text_buffer, &start, &end, FALSE);
+	locale = g_locale_from_utf8 (contents, -1, NULL, NULL, NULL);
+	g_free (contents), contents = NULL;
+	return locale;
 }
 
 //À finir !
@@ -81,42 +106,11 @@ void on_changed_search_entry (GtkSearchEntry *entry,gpointer user_data){
 		strcpy(str_copy,(char *) entry_text+cpt);
 		if(strlen(str_copy) > 0){
 			const char separator = ' ';
-
-			Strings strings = convert_str_into_TabStr_by_separator(str_copy,separator);
-
-			printf("strings.size : %d\n", strings.size);
-			
-			show_argv(strings.tabStr,strings.size);
-			printf("\n");
-			sort_words(strings.tabStr,strings.size);
-			show_argv(strings.tabStr,strings.size);
-			printf("\n");
-
-			//Ancien main problème d'erreur de segmentation, ça pu....
-			int nb_etats,sizeprefix; 
-			char ** prefix=genere_prefix(strings.tabStr,0,strings.size,&nb_etats,&sizeprefix);
-			show_argv(prefix,nb_etats);
-			printf("%d\n", nb_etats);
-			int ** commande=tableau_commande(prefix,nb_etats);
-			show_tableau_commande(commande,nb_etats);
-			int * erreur=tableau_erreur(prefix,nb_etats);
-			show_tableau_erreur(erreur,nb_etats);
-			fuuuuusion(commande,erreur,nb_etats);
-			show_tableau_commande(commande,nb_etats);
-			//free zone
-			printf("mots\n");
-			free_argv(strings.tabStr,strings.size);
-			printf("prefix\n");
-			free_argv(prefix,nb_etats);
-			printf("erreur\n");
-			free(erreur);
-			erreur=NULL;
-			free(str_copy);
-			str_copy=NULL;
-			printf("commande\n");
-			free_tabIntInt(commande,nb_etats+1);
-			printf("Fiiiiiiiiiiiiiiiiiiiiiiiiiin\n");
-		}
+			char * text = (char*)getText_from_TextView(GTK_TEXT_VIEW(my->p_text_view));
+			int ** commande = build_commande(str_copy, separator);
+		}	
+		free(str_copy);
+		str_copy=NULL;
 	}
 }
 

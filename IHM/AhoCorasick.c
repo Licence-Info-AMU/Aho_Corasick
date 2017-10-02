@@ -9,6 +9,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "AhoCorasick.h"
+#include "strings.h"
+#include "utils.h"
 
 #define NBCARAC	256
 #define FIRSTCARAC	0
@@ -246,6 +248,7 @@ int nextetat(int ** commande,int etat, char lettre ){
 	return 0;
 }
 
+<<<<<<< HEAD
 /*
 int lirecarac(char lettre,peut etre my ?){														//renvoi 0 ou renvoie la taille du mot lu si on arrive a la fin de mot (donc revenir en arrière pour colorier)
 	my->etat=nextetat(my->commande,my->etat,lettre);	//change l'etat avec la lettre lue
@@ -255,3 +258,30 @@ int lirecarac(char lettre,peut etre my ?){														//renvoi 0 ou renvoie la
 	return 0;
 }		//pense a initialiser my->etat=0 avant chaque lecture du debut du text ;)
 */
+=======
+int ** build_commande(char * words, const char separator){
+	Strings strings = convert_str_into_TabStr_by_separator(words,separator);
+	show_argv(strings.tabStr,strings.size);
+	printf("\n");
+	sort_words(strings.tabStr,strings.size);
+	show_argv(strings.tabStr,strings.size);
+	printf("\n");
+
+	int nb_etats,sizeprefix; 
+	char ** prefix=genere_prefix(strings.tabStr,0,strings.size,&nb_etats,&sizeprefix);
+	show_argv(prefix,nb_etats);
+	int ** commande=tableau_commande(prefix,nb_etats);
+	show_tableau_commande(commande,nb_etats);
+	int * erreur=tableau_erreur(prefix,nb_etats);
+	show_tableau_erreur(erreur,nb_etats);
+	fuuuuusion(commande,erreur,nb_etats);
+	show_tableau_commande(commande,nb_etats);
+	//free zone
+	free_argv(strings.tabStr,strings.size);
+	free_argv(prefix,nb_etats);
+	free(erreur);
+	erreur=NULL;
+	//free_tabIntInt(commande,nb_etats+1);
+	return commande;
+}
+>>>>>>> cffb5698865e37eab9dcc08d4c1e13552f24bf4e

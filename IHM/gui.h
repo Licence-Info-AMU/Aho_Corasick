@@ -39,6 +39,10 @@ void text_view_init (gpointer user_data);
  */
 void text_view_color(gpointer user_data,int start, int end);
 
+void text_view_remove_all_color(gpointer user_data,int start, int end);
+
+gchar * getText_from_TextView(GtkTextView * p_text_view);
+
 /**
  * \fn void search_bar_init(gpointer user_data)
  * \brief Fonction d'initialisation de la barre de recherche
