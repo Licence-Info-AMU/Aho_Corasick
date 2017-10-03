@@ -257,8 +257,8 @@ void search_words(char * words, const char separator,char * text,gpointer user_d
         //On continue si rien ne correspond
         if(currentState != 0){
 			if (etats_finaux[currentState-1] != 0){//On continue si rien ne correspond
-				printf("on a trouver un mot !!! debut du mot : %d fin du mot %d\n",i-etats_finaux[currentState-1],i );	// le mot c'est prefix[currentState-1]
-				text_view_color(my,i-etats_finaux[currentState-1],i);
+				printf("on a trouver un mot !!! debut du mot : %d fin du mot %d\n",i-etats_finaux[currentState-1]+1,i+1);	// le mot c'est prefix[currentState-1]
+				text_view_color(my,i-etats_finaux[currentState-1]+1,i+1);
 			}
 		}
     }
