@@ -28,7 +28,7 @@ int nextetat(int ** commande,int etat, char lettre );
 
 int ** build_commande(char ** prefix,int nb_etats);
 
-void search_words(char * words, const char separator,char * text);
+void search_words(char * words, const char separator,char * text,gpointer user_data);
 
 #endif	/* AHOCORASICK_H */
 

@@ -5,9 +5,12 @@
  * Created on 28 septembre 2017, 19:07
  */
 
+#include <gtk/gtk.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "mydata.h"
+#include "gui.h"
 #include "AhoCorasick.h"
 #include "strings.h"
 #include "utils.h"
@@ -226,7 +229,8 @@ int ** build_commande(char ** prefix,int nb_etats){
 	return commande;
 }
 
-void search_words(char * words, const char separator,char * text){
+void search_words(char * words, const char separator,char * text,gpointer user_data){
+	Mydata *my = get_mydata(user_data);
     Strings strings = convert_str_into_TabStr_by_separator(words,separator);
     show_argv(strings.tabStr,strings.size);
     printf("\n");
@@ -251,9 +255,12 @@ void search_words(char * words, const char separator,char * text){
         currentState = nextetat(commande,currentState,text[i]);
         //printf("currentState : %d\n",currentState);
         //On continue si rien ne correspond
-        if (etats_finaux[currentState] != 0){//On continue si rien ne correspond
-            printf("on a trouver un mot !!! debut du mot : %d fin du mot %d\n",i-etats_finaux[currentState],i );	// le mot c'est prefix[currentState-1]
-        }
+        if(currentState != 0){
+			if (etats_finaux[currentState-1] != 0){//On continue si rien ne correspond
+				printf("on a trouver un mot !!! debut du mot : %d fin du mot %d\n",i-etats_finaux[currentState-1],i );	// le mot c'est prefix[currentState-1]
+				text_view_color(my,i-etats_finaux[currentState-1],i);
+			}
+		}
     }
     
     //free zone

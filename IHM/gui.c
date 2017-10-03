@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "gui.h"
 #include "mydata.h"
 #include "AhoCorasick.h"
 #include "strings.h"
@@ -107,7 +108,8 @@ void on_changed_search_entry (GtkSearchEntry *entry,gpointer user_data){
 		if(strlen(str_copy) > 0){
 			const char separator = ' ';
 			char * text = (char*)getText_from_TextView(GTK_TEXT_VIEW(my->p_text_view));
-			search_words(str_copy, separator,text);
+			text_view_remove_all_color(my,0,strlen(text));
+			search_words(str_copy, separator,text,my);
 		}	
 		free(str_copy);
 		str_copy=NULL;
