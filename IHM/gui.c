@@ -107,7 +107,7 @@ void on_changed_search_entry (GtkSearchEntry *entry,gpointer user_data){
 		if(strlen(str_copy) > 0){
 			const char separator = ' ';
 			char * text = (char*)getText_from_TextView(GTK_TEXT_VIEW(my->p_text_view));
-			int ** commande = build_commande(str_copy, separator);
+			search_words(str_copy, separator,text);
 		}	
 		free(str_copy);
 		str_copy=NULL;

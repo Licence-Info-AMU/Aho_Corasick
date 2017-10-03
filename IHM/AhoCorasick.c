@@ -18,7 +18,7 @@
 char * ajouteprefix(int size,char * mot){
 	char *prefix=calloc(size,sizeof(char));
 	if(prefix==NULL){
-		perror("calloc");
+		perror("malloc");
 		exit(1);
 	}
 	memcpy(prefix, mot, size);
@@ -85,7 +85,7 @@ int ** tableau_commande(char ** prefix,int nb_etats){
 	for (int numprefix = 0; numprefix < nb_etats; ++numprefix){
 		if(strlen(prefix[numprefix])==sizeprefix){
 			if(sizeprefix==1){
-				commande[0][prefix[numprefix][0]-FIRSTCARAC]=numprefix+1;			// met le numérot de l'etat correspondant au prefix dans la case de la lette/0 (prefix[numprefix][sizeprefix-1]-'a')
+				commande[0][atoi(&prefix[numprefix][0])]=numprefix+1;			// met le numérot de l'etat correspondant au prefix dans la case de la lette/0 (prefix[numprefix][sizeprefix-1]-'a')
 			}
 			else{
 				int preprefix=-1;
@@ -95,7 +95,7 @@ int ** tableau_commande(char ** prefix,int nb_etats){
 					}
 				}
 				if (preprefix!=-1){
-					commande[preprefix+1][prefix[numprefix][sizeprefix-1]-FIRSTCARAC]=numprefix+1;	// met le numérot de l'etat correspondant au prefix dans la case de la lette/preprefix (prefix[numprefix][sizeprefix-1]-'a')
+					commande[preprefix+1][atoi(&prefix[numprefix][sizeprefix-1])]=numprefix+1;	// met le numérot de l'etat correspondant au prefix dans la case de la lette/preprefix (prefix[numprefix][sizeprefix-1]-'a')
 				}
 				else{
 					printf("%s %s %s \n",prefix[numprefix],prefix[firstprefix],prefix[nextfirstprefix]);			//perror si on a pas trouver le prefix du prefix
@@ -112,24 +112,6 @@ int ** tableau_commande(char ** prefix,int nb_etats){
 	}
 	return commande;
 }
-
-/*
-void show_tableau_commande(int ** commande, int nb_etats){
-	printf("\ntableau commande :\n");
-	for (int j = 0; j < NBCARAC; ++j){
-		printf("\t%c",j+FIRSTCARAC );
-	}
-	printf("\n");
-	for (int i = 0; i < nb_etats+1; ++i){
-		printf("%d :\t", i);
-		for (int j = 0; j < NBCARAC; ++j){
-			printf("%d\t", commande[i][j]);
-		}
-		printf("\n");
-	}
-}
-*/
-
 
 void show_tableau_commande(int ** commande, int nb_etats){
 	printf("\ntableau commande :\n");
@@ -163,10 +145,6 @@ void show_tableau_commande(int ** commande, int nb_etats){
 
 int * tableau_erreur(char ** prefix,int nb_etats){
 	int * tab_erreur=calloc(nb_etats,sizeof(int));
-	if(tab_erreur==NULL){
-		perror("calloc");
-		exit(1);
-	}
 	for (int numprefix = 0; numprefix < nb_etats; ++numprefix){
 		if(strlen(prefix[numprefix])>1){											// pour tout les prefix de plus d'un lettre
 			int sufix=0;
@@ -193,13 +171,16 @@ void show_tableau_erreur(int * erreur,int nb_etats){
 
 void fuuuuusion(int ** commande,int * erreur,int nb_etats){
 	for (int etat = 0; etat < nb_etats; ++etat){
-		for (int i = 0; i < NBCARAC; ++i){
-			if(commande[etat+1][i]==0 && commande[erreur[etat]][i]!=0){
-				commande[etat+1][i]=commande[erreur[etat]][i];			// ajout des transition non 0 de l'erreur[etat]  sur les transition 0 de l'etat
+		if(erreur[etat]>0){					// pour tout les etats qui on un retour en cas d'erreur
+			for (int i = 0; i < NBCARAC; ++i){
+				if(commande[etat+1][i]==0 && commande[erreur[etat]][i]!=0){
+					commande[etat+1][i]=commande[erreur[etat]][i];			// ajout des transition non 0 de l'erreur[etat]  sur les transition 0 de l'etat
+				}
 			}
 		}
 	}
 }
+
 
 int * etat_finaux(char ** mots,int nbmots,char ** prefix,int nb_etats){
 	int * etat_finaux=calloc(nb_etats,sizeof(int));
@@ -207,7 +188,6 @@ int * etat_finaux(char ** mots,int nbmots,char ** prefix,int nb_etats){
 		perror("calloc");
 		exit(1);
 	}
-
 	for (int etat = 0; etat < nb_etats; ++etat){
 		for (int i = 0; i < nbmots; ++i){
 			if(strcmp(prefix[etat],mots[i]) == 0){
@@ -217,22 +197,6 @@ int * etat_finaux(char ** mots,int nbmots,char ** prefix,int nb_etats){
 	}
 	return etat_finaux;
 }
-
-/*
-int startread(int ** commande,char lettre ){		// peut etre useless (utilisation de nextetat avec etat=0)
-	int read=0;
-	for (int i = 0; i < NBCARAC; ++i){	//tester si la lettre est dans commande
-		if (lettre==(char) i+FIRSTCARAC){
-			read=1;
-			break;
-		}
-	}
-	if (read){
-		return commande[0][lettre];
-	}
-	return 0;
-}
-*/
 
 int nextetat(int ** commande,int etat, char lettre ){
 	int read=0;
@@ -248,18 +212,21 @@ int nextetat(int ** commande,int etat, char lettre ){
 	return 0;
 }
 
-<<<<<<< HEAD
-/*
-int lirecarac(char lettre,peut etre my ?){														//renvoi 0 ou renvoie la taille du mot lu si on arrive a la fin de mot (donc revenir en arrière pour colorier)
-	my->etat=nextetat(my->commande,my->etat,lettre);	//change l'etat avec la lettre lue
-	if(my->etat > 0){
-		return my->etat_finaux[etat-1];
-	}
-	return 0;
-}		//pense a initialiser my->etat=0 avant chaque lecture du debut du text ;)
-*/
-=======
-int ** build_commande(char * words, const char separator){
+int ** build_commande(char ** prefix,int nb_etats){
+	int ** commande=tableau_commande(prefix,nb_etats);
+	show_tableau_commande(commande,nb_etats);
+	
+	int * erreur=tableau_erreur(prefix,nb_etats);
+	show_tableau_erreur(erreur,nb_etats);
+	
+	fuuuuusion(commande,erreur,nb_etats);
+	show_tableau_commande(commande,nb_etats);
+	free(erreur);
+	erreur=NULL;
+	return commande;
+}
+
+void search_words(char * words, const char separator,char * text){
 	Strings strings = convert_str_into_TabStr_by_separator(words,separator);
 	show_argv(strings.tabStr,strings.size);
 	printf("\n");
@@ -267,21 +234,20 @@ int ** build_commande(char * words, const char separator){
 	show_argv(strings.tabStr,strings.size);
 	printf("\n");
 
-	int nb_etats,sizeprefix; 
-	char ** prefix=genere_prefix(strings.tabStr,0,strings.size,&nb_etats,&sizeprefix);
+	int nb_etats;
+	char ** prefix=genere_prefix(strings.tabStr,0,strings.size,&nb_etats);
 	show_argv(prefix,nb_etats);
-	int ** commande=tableau_commande(prefix,nb_etats);
-	show_tableau_commande(commande,nb_etats);
-	int * erreur=tableau_erreur(prefix,nb_etats);
-	show_tableau_erreur(erreur,nb_etats);
-	fuuuuusion(commande,erreur,nb_etats);
-	show_tableau_commande(commande,nb_etats);
+	
+	int * etats_finaux = etat_finaux(strings.tabStr,strings.size,prefix,nb_etats);
+	
+	int ** commande=build_commande(prefix,nb_etats);
+	
 	//free zone
 	free_argv(strings.tabStr,strings.size);
 	free_argv(prefix,nb_etats);
-	free(erreur);
-	erreur=NULL;
-	//free_tabIntInt(commande,nb_etats+1);
-	return commande;
+	
+	free(etats_finaux);
+	etats_finaux=NULL;
+	
+	free_tabIntInt(commande,nb_etats+1);
 }
->>>>>>> cffb5698865e37eab9dcc08d4c1e13552f24bf4e
