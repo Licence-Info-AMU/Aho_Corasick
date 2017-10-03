@@ -85,7 +85,7 @@ int ** tableau_commande(char ** prefix,int nb_etats){
 	for (int numprefix = 0; numprefix < nb_etats; ++numprefix){
 		if(strlen(prefix[numprefix])==sizeprefix){
 			if(sizeprefix==1){
-				commande[0][atoi(&prefix[numprefix][0])]=numprefix+1;			// met le numérot de l'etat correspondant au prefix dans la case de la lette/0 (prefix[numprefix][sizeprefix-1]-'a')
+				commande[0][(int)prefix[numprefix][0]]=numprefix+1;			// met le numérot de l'etat correspondant au prefix dans la case de la lette/0 (prefix[numprefix][sizeprefix-1]-'a')
 			}
 			else{
 				int preprefix=-1;
@@ -95,7 +95,7 @@ int ** tableau_commande(char ** prefix,int nb_etats){
 					}
 				}
 				if (preprefix!=-1){
-					commande[preprefix+1][atoi(&prefix[numprefix][sizeprefix-1])]=numprefix+1;	// met le numérot de l'etat correspondant au prefix dans la case de la lette/preprefix (prefix[numprefix][sizeprefix-1]-'a')
+					commande[preprefix+1][(int)prefix[numprefix][sizeprefix-1]]=numprefix+1;	// met le numérot de l'etat correspondant au prefix dans la case de la lette/preprefix (prefix[numprefix][sizeprefix-1]-'a')
 				}
 				else{
 					printf("%s %s %s \n",prefix[numprefix],prefix[firstprefix],prefix[nextfirstprefix]);			//perror si on a pas trouver le prefix du prefix
@@ -207,7 +207,7 @@ int nextetat(int ** commande,int etat, char lettre ){
 		}
 	}
 	if (read){
-		return commande[etat][atoi(&lettre)];
+		return commande[etat][(int)lettre];
 	}
 	return 0;
 }
@@ -249,7 +249,7 @@ void search_words(char * words, const char separator,char * text){
     //On cherche dans le texte
     for (int i = 0; i < strlen(text); ++i){
         currentState = nextetat(commande,currentState,text[i]);
-        printf("currentState : %d\n",currentState);
+        //printf("currentState : %d\n",currentState);
         //On continue si rien ne correspond
         if (etats_finaux[currentState] != 0){//On continue si rien ne correspond
             printf("on a trouver un mot !!! debut du mot : %d fin du mot %d\n",i-etats_finaux[currentState-1],i );	// le mot c'est prefix[currentState-1]

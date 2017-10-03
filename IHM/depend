@@ -1,6 +1,7 @@
-AhoCorasick.o: AhoCorasick.c AhoCorasick.h
-gui.o: gui.c mydata.h strings.h AhoCorasick.h utils.h
+AhoCorasick.o: AhoCorasick.c AhoCorasick.h strings.h utils.h
+gui.o: gui.c mydata.h AhoCorasick.h strings.h utils.h
 main-app.o: main-app.c mydata.h menus.h gui.h
+main.o: main.c utils.h AhoCorasick.h
 menus.o: menus.c mydata.h menus.h
 mydata.o: mydata.c mydata.h
 strings.o: strings.c strings.h
