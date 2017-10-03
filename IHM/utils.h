@@ -8,6 +8,11 @@
 #ifndef UTILS_H
 #define	UTILS_H
 
+typedef struct {
+	int start;
+	int end;
+} TextPosition;
+
 //Copy a char ** on another char**
 char**  copy_argv(char** argv,int start,int size);
 
