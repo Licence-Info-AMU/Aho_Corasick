@@ -227,44 +227,41 @@ int ** build_commande(char ** prefix,int nb_etats){
 }
 
 void search_words(char * words, const char separator,char * text){
-	Strings strings = convert_str_into_TabStr_by_separator(words,separator);
-	show_argv(strings.tabStr,strings.size);
-	printf("\n");
-	sort_words(strings.tabStr,strings.size);
-	show_argv(strings.tabStr,strings.size);
-	printf("\n");
+    Strings strings = convert_str_into_TabStr_by_separator(words,separator);
+    show_argv(strings.tabStr,strings.size);
+    printf("\n");
+    sort_words(strings.tabStr,strings.size);
+    show_argv(strings.tabStr,strings.size);
+    printf("\n");
 
-	int nb_etats;
-	char ** prefix=genere_prefix(strings.tabStr,0,strings.size,&nb_etats);
-	show_argv(prefix,nb_etats);
-	
-	int * etats_finaux = etat_finaux(strings.tabStr,strings.size,prefix,nb_etats);
-	
-	int ** commande=build_commande(prefix,nb_etats);
-	
-	int currentState = 0;
+    int nb_etats;
+    char ** prefix=genere_prefix(strings.tabStr,0,strings.size,&nb_etats);
+    show_argv(prefix,nb_etats);
+    
+    int * etats_finaux = etat_finaux(strings.tabStr,strings.size,prefix,nb_etats);
+    
+    int ** commande=build_commande(prefix,nb_etats);
+
+    //ici free prefix
+    
+    int currentState = 0;
  
-	//On cherche dans le texte
+    //On cherche dans le texte
     for (int i = 0; i < strlen(text); ++i){
         currentState = nextetat(commande,currentState,text[i]);
-		printf("currentState : %d\n",currentState);
+        printf("currentState : %d\n",currentState);
         //On continue si rien ne correspond
-        if (etats_finaux[currentState] == 0)
-             continue;
- 
-        //on affiche les mots trouvés avec leurs positions dans le texte
-        for (int j = 0; j < strings.size; ++j){
-		printf("Word : %s appears from %d to %d \n",strings.tabStr[j],(i - (int)strlen(strings.tabStr[j]) + 1),i);
-            }
+        if (etats_finaux[currentState] != 0){//On continue si rien ne correspond
+            printf("on a trouver un mot !!! debut du mot : %d fin du mot %d\n",i-etats_finaux[currentState-1],i );	// le mot c'est prefix[currentState-1]
         }
     }
-	
-	//free zone
-	free_argv(strings.tabStr,strings.size);
-	free_argv(prefix,nb_etats);
-	
-	free(etats_finaux);
-	etats_finaux=NULL;
-		
-	free_tabIntInt(commande,nb_etats+1);
+    
+    //free zone
+    free_argv(strings.tabStr,strings.size);
+    free_argv(prefix,nb_etats);
+    
+    free(etats_finaux);
+    etats_finaux=NULL;
+        
+    free_tabIntInt(commande,nb_etats+1);
 }
