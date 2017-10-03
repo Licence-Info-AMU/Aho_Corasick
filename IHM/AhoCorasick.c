@@ -254,8 +254,7 @@ void search_words(char * words, const char separator,char * text){
  
         //on affiche les mots trouvés avec leurs positions dans le texte
         for (int j = 0; j < strings.size; ++j){
-            if (etats_finaux[currentState] & (1 << j)){						//On check si le bit est set
-				printf("Word : %s appears from %d to %d \n",strings.tabStr[j],(i - (int)strlen(strings.tabStr[j]) + 1),i);
+		printf("Word : %s appears from %d to %d \n",strings.tabStr[j],(i - (int)strlen(strings.tabStr[j]) + 1),i);
             }
         }
     }
