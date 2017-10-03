@@ -207,7 +207,7 @@ int nextetat(int ** commande,int etat, char lettre ){
 		}
 	}
 	if (read){
-		return commande[etat][(int)lettre-FIRSTCARAC];
+		return commande[etat][atoi(&lettre)];
 	}
 	return 0;
 }
@@ -241,6 +241,24 @@ void search_words(char * words, const char separator,char * text){
 	int * etats_finaux = etat_finaux(strings.tabStr,strings.size,prefix,nb_etats);
 	
 	int ** commande=build_commande(prefix,nb_etats);
+	
+	int currentState = 0;
+ 
+	//On cherche dans le texte
+    for (int i = 0; i < strlen(text); ++i){
+        currentState = nextetat(commande,currentState,text[i]);
+		printf("currentState : %d\n",currentState);
+        //On continue si rien ne correspond
+        if (etats_finaux[currentState] == 0)
+             continue;
+ 
+        //on affiche les mots trouvés avec leurs positions dans le texte
+        for (int j = 0; j < strings.size; ++j){
+            if (etats_finaux[currentState] & (1 << j)){
+				printf("Word : %s appears from %d to %d \n",strings.tabStr[j],(i - (int)strlen(strings.tabStr[j]) + 1),i);
+            }
+        }
+    }
 	
 	//free zone
 	free_argv(strings.tabStr,strings.size);

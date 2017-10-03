@@ -37,8 +37,6 @@ void show_argv(char** argv,int size){
 //Free a char**
 void free_argv(char** argv,int size){
     for(int i = 0; i < size; ++i){
-        printf("le bug  argv de merde i :%d/%d\n",i,size);
-        printf("%s\n",argv[i]);
         free(argv[i]);
         argv[i]=NULL;
     }
@@ -48,7 +46,6 @@ void free_argv(char** argv,int size){
 
 void free_tabIntInt(int ** tabInt, int size){
 	for(int i = 0; i < size; ++i){
-        printf("le bug int de merde i :%d/%d\n",i,size);
         free(tabInt[i]);
         tabInt[i]=NULL;
     }
